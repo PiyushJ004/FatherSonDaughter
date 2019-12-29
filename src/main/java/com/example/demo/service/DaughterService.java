@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Daughter;
+import com.example.demo.model.Son;
 import com.example.demo.repository.DaughterRepository;
 
 @Service
@@ -35,9 +36,9 @@ public class DaughterService {
 		logger.info("*********************Inside DaughterService in getDaughterById method*******************");
 		try {
 			logger.info("******************Inside getDaughterById try********************");
-			Daughter daughterToDb = daughterRepository.daughterById(daughterId, name);
-			logger.info("Daughter value:" + daughterToDb);
-			return daughterToDb;
+			Daughter daughterFromDb = daughterRepository.daughterById(daughterId, name);
+			logger.info("Daughter value:" + daughterFromDb);
+			return daughterFromDb;
 		} catch (final Exception e) {
 			logger.error("**************Inside getDaughterById catch exception *****************");
 			throw new HibernateException("Sorry, No daughter found with id: and daughterName: "+ daughterId +name);
@@ -47,9 +48,9 @@ public class DaughterService {
 	public List<Daughter> getAllDaughters(){
 		logger.info("********************Inside DaughterServie in getAllDaughters method*******************");
 		try {
-			List<Daughter> daughterToDb = daughterRepository.getAllDaughters();
-			logger.info("Daughter value: " + daughterToDb);
-			return daughterToDb;
+			List<Daughter> daughterFromDb = daughterRepository.getAllDaughters();
+			logger.info("Daughter value: " + daughterFromDb);
+			return daughterFromDb;
 		} catch (final Exception e) {
 			logger.error("***************Inside getAllDaughters catch exception********************");
 			throw new HibernateException("Sorry, No Daughter found");
@@ -67,5 +68,19 @@ public class DaughterService {
 			logger.error("*****************Inside deleteSonById catch exception***************");
 			throw new HibernateException("Sorry, No Daughter found");
 		}
+	}
+	
+	public Daughter getDaughterByDaughterIdOnly(Long id) {
+		logger.info("************Inside DaughterService in getDaughterByDaughterIdOnly method************** ");
+		try {
+			logger.info("************Inside getDaughterByDaughterIdOnly try*************** ");
+			Daughter daughterFromDB = daughterRepository.daughterByIdOnly(id);
+			logger.info("Daughter value: " + daughterFromDB );
+			return daughterFromDB;
+		} catch (final Exception e) {
+			logger.error("************Inside getDaughterByDaughterIdOnly catch exception***************");
+			throw new RuntimeException(e.getMessage());
+		}
+
 	}
 }

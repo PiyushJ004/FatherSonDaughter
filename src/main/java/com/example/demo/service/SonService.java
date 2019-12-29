@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Father;
 import com.example.demo.model.Son;
 import com.example.demo.repository.SonRepository;
 
@@ -36,9 +37,9 @@ public class SonService {
 		logger.info("*****************Inside SonService in getSonById method****************");
 		try {
 			logger.info("*************Inside getSonById try**************");
-			Son sonToDb = sonRepository.sonById(sonId, name);
-			logger.info("Son value:" + sonToDb);
-			return sonToDb;
+			Son sonFromDb = sonRepository.sonById(sonId, name);
+			logger.info("Son value:" + sonFromDb);
+			return sonFromDb;
 		} catch (final Exception e) {
 			logger.error("*****************Inside getSonById catch exception**************");
 			throw new HibernateException("Sorry, No son with id: and sonName:" + sonId + name);
@@ -49,9 +50,9 @@ public class SonService {
 		logger.info("**************Inside SonService in getAllSons method***************");
 		try {
 			logger.info("***********Inside getAllSons try*************");
-			List<Son> sonToDb = sonRepository.getAllSons();
-			logger.info("Father value: " + sonToDb);
-			return sonToDb;
+			List<Son> sonFromDb = sonRepository.getAllSons();
+			logger.info("Father value: " + sonFromDb);
+			return sonFromDb;
 		} catch(final Exception e) {
 			logger.error("************Inside getAllSons catch exception**************");
 			throw new HibernateException("Sorry, No Son found");
@@ -69,6 +70,20 @@ public class SonService {
 			logger.error("*************Inside deleteSonById catch exception*****************");
 			throw new HibernateException("Sorry, No son found");
 		}
+	}
+	
+	public Son getSonBySonIdOnly(Long id) {
+		logger.info("************Inside SonService in getSonBySonIdOnly method************** ");
+		try {
+			logger.info("************Inside getSonBySonIdOnly try*************** ");
+			Son sonFromDB = sonRepository.sonByIdOnly(id);
+			logger.info("Son value: " + sonFromDB );
+			return sonFromDB;
+		} catch (final Exception e) {
+			logger.error("************Inside getSonBySonIdOnly catch exception***************");
+			throw new RuntimeException(e.getMessage());
+		}
+
 	}
 
 }
