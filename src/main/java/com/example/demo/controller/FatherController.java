@@ -120,7 +120,7 @@ public class FatherController {
 
 	}
 
-	@RequestMapping(path = "delete", method = RequestMethod.DELETE, produces = "text/plain")
+	@RequestMapping(path = "/delete", method = RequestMethod.DELETE, produces = "text/plain")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/delete", notes = "Remove Father Resouce BY ID", response = String.class)
