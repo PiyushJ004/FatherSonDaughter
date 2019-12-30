@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.Father;
 import com.example.demo.model.Son;
 import com.example.demo.service.SonService;
 import com.google.gson.Gson;
@@ -31,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping
+@RequestMapping(path="/api/object/son")
 @Api(value = "Son Crud Operations", description = "This controller is for crud operation of son instance")
 public class SonController {
 	
@@ -78,13 +77,14 @@ public class SonController {
 			return new ResponseEntity<String>("Sorry, Could not retrive data from son table for id:- " + id,
 					HttpStatus.BAD_REQUEST);
 		}
-		Gson gson = new Gson();
-		String gsonString = gson.toJson(sonFromDB);
-		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
+		/*
+		 * Gson gson = new Gson(); String gsonString = gson.toJson(sonFromDB);
+		 */
+		return new ResponseEntity<Son>(sonFromDB, HttpStatus.OK);
 		
 	}
 	
-	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "applucation/json")
+	@RequestMapping(path = "/get1", method = RequestMethod.GET, produces = "applucation/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get Son Resource by id and name", response = Son.class)
@@ -104,7 +104,7 @@ public class SonController {
 		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
 	}
 	
-	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(path = "/get2", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get all son resources", response = Son.class, responseContainer = "LIST")

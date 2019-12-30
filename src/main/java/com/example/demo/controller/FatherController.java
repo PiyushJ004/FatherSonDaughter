@@ -57,9 +57,8 @@ public class FatherController {
 
 		Father fatherToDb = fatherService.registerFather(father);
 		logger.info("Father value: " + fatherToDb);
-		Gson gson = new Gson();
-		String gsonString = gson.toJson(fatherToDb);
-		return new ResponseEntity<String>(gsonString, HttpStatus.CREATED);
+		
+		return new ResponseEntity<Father>(fatherToDb, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
@@ -76,12 +75,11 @@ public class FatherController {
 			return new ResponseEntity<String>("Sorry Could Not Retrieve Data From Father Table For id:- " + id,
 					HttpStatus.BAD_REQUEST);
 		}
-		Gson gson = new Gson();
-		String gsonString = gson.toJson(fatherFromDB);
-		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
+		
+		return new ResponseEntity<Father>(fatherFromDB, HttpStatus.OK);
 	}
 
-	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(path = "/get1", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get Father Resource By Id and Name", response = Father.class)
@@ -102,7 +100,7 @@ public class FatherController {
 
 	}
 
-	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(path = "/get2", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get All Father Resources", response = Father.class, responseContainer = "LIST")

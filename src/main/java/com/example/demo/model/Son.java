@@ -3,11 +3,14 @@ package com.example.demo.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -17,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -25,45 +29,58 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity(name = "Son")
-@Table(name = "son_data", uniqueConstraints = {@UniqueConstraint(columnNames = {"s_PhoneNo", "s_Email"})})
+@Table(name = "son_data", uniqueConstraints = { @UniqueConstraint(columnNames = { "s_PhoneNo", "s_Email" }) })
 
-public class Son implements Serializable{
-	
+public class Son implements Serializable {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-	
+
 	@Column(name = "s_Name", updatable = true)
 	@NotBlank(message = "Please provide son name")
 	@ApiModelProperty(notes = "This block is for son name")
 	private String sNAme;
-	
+
 	@Column(name = "sex", updatable = true)
 	@NotNull(message = "Please provide son sexual identity")
 	@ApiModelProperty(notes = "This block is for son sexual identity")
 	private String sex;
-	
-	@Column(name = "s_PhoneNo",updatable = true)
+
+	@Column(name = "s_PhoneNo", updatable = true)
 	@NotEmpty(message = "Please provide son mobile number")
 	@Size(min = 10, max = 15, message = "Phone number must be 10 to 15 char long")
 	@ApiModelProperty(notes = "This block is for son phone number")
 	private String sPhoneNo;
-	
+
 	@Column(name = "s_Dob", updatable = true)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.sss'Z'")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime sDob;
-	
+
 	@Column(name = "s_Age", updatable = true)
 	@ApiModelProperty(notes = "This block is for son age")
 	private Long sAge;
-	
+
 	@Email
 	@Column(name = "s_Email", updatable = true)
 	@ApiModelProperty(notes = "This block is for son email")
 	private String sEmail;
+
+	@ManyToOne(cascade = { CascadeType.MERGE })
+	@JoinColumn(name = "father_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = false)
+	@JsonIgnoreProperties("son")
+	private Father father_id;
+
+	public Father getFather_id() {
+		return father_id;
+	}
+
+	public void setFather_id(Father father_id) {
+		this.father_id = father_id;
+	}
 
 	public Long getId() {
 		return id;
@@ -206,7 +223,5 @@ public class Son implements Serializable{
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
 
 }

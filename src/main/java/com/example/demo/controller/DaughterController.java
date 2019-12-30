@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping
+@RequestMapping(path="/api/object/daughter")
 @Api(value = "Daughter Crud Operation", description = "This controller is for crud operation of daughter instance")
 public class DaughterController {
 	
@@ -42,7 +42,7 @@ public class DaughterController {
 	@RequestMapping(path = "/create", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation(value = "/get", notes = "Get Daughter resource by id", response = Daughter.class)
+	@ApiOperation(value = "/create", notes = "Get Daughter resource by id", response = Daughter.class)
 	public ResponseEntity<?> createInstance(@Valid @RequestBody Daughter daughter, BindingResult bindingResult){
 		logger.info("***************Inside DaughterController Instance method****************");
 		if(bindingResult.hasErrors() == true) {
@@ -81,7 +81,7 @@ public class DaughterController {
 		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
 	}
 	
-	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(path = "/get1", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get Daughter resource by id and name", response = Daughter.class)
@@ -101,7 +101,7 @@ public class DaughterController {
 		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
 	}
 	
-	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(path = "/get2", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get all daughter resource", response = Daughter.class, responseContainer = "List")

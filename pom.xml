@@ -20,19 +20,11 @@
 	</properties>
 
 	<dependencies>
-
-
-
-		<!-- https://mvnrepository.com/artifact/com.github.raychatter/spring-restful-exception-handler -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.github.raychatter</groupId>
 			<artifactId>spring-restful-exception-handler</artifactId>
 			<version>1.0.5</version>
-		</dependency>
-
-
-
-
+		</dependency> -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>

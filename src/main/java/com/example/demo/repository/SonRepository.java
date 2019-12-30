@@ -1,3 +1,4 @@
+
 package com.example.demo.repository;
 
 import java.util.List;
@@ -14,24 +15,18 @@ import com.example.demo.model.Son;
 @Repository
 public interface SonRepository extends CrudRepository<Son, Long> {
 
-	@Query("Select Son from #{entityName} Son where id = ?1")
+	@Query("Select Son from #{#entityName} Son where id = ?1")
 	public Son sonByIdOnly(Long sonId);
-	
-	@Query("Select Son from #{entityName} Son where id = ?1 and sNAme = ?1")
+
+	@Query("Select Son from #{#entityName} Son where id = ?1 and sNAme = ?1")
 	public Son sonById(Long sonId, String sonName);
-	
-	@Query("Select Son from #{entityName} Son")
+
+	@Query("Select Son from #{#entityName} Son")
 	public List<Son> getAllSons();
-	
-	@Query("Delete #{#entityName} Son where id = ?1")
-	public void deleteById(Long deleteId);
-	
+
 	@Modifying
 	@Transactional
-	@Query("Update Son from #{entityName} Son where id = ?1")
-	public Son updateById(String updateId);
-	
-	
-	
-	
+	@Query("Delete #{#entityName} Son where id = ?1")
+	public void deleteById(Long deleteId);
+
 }

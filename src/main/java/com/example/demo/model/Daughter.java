@@ -45,13 +45,13 @@ public class Daughter implements Serializable {
 	private String dSex;
 	
 	@Column(name = "d_PhoneNo", updatable = true)
-	@NotEmpty(message = "Please provide daughter mobile number")
+	//@NotEmpty(message = "Please provide daughter mobile number")
 	@Size(min = 10, max = 15, message = "Phone number must be 10 to 15 char long")
 	@ApiModelProperty(notes = "This block is for daughter phone number")
 	private String dPhoneNo;
 	
 	@Column(name = "d_Dob", updatable = true)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.sss'Z'")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime dDob;

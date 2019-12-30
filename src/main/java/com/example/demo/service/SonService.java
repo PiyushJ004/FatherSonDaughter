@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.Father;
 import com.example.demo.model.Son;
 import com.example.demo.repository.SonRepository;
 

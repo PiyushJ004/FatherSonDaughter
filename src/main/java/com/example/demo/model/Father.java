@@ -2,12 +2,17 @@ package com.example.demo.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -17,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -25,61 +31,75 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity(name = "Father")
-@Table(name = "father_data", uniqueConstraints = {@UniqueConstraint(columnNames = {"f_PhoneNo", "f_Email"})})
+@Table(name = "father_details", uniqueConstraints = { @UniqueConstraint(columnNames = { "f_PhoneNo", "f_Email" }) })
 
 public class Father implements Serializable {
-	
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(name = "f_Name", updatable = true)
 	@NotBlank(message = "Please provide father detail")
 	@ApiModelProperty(notes = "This block is for father name")
 	private String fName;
-	
+
 	@Column(name = "f_Address", updatable = true)
 	@NotEmpty(message = "Please provide father address")
 	@Size(min = 6, max = 20, message = "Address must be  6 to 20 char long")
 	@ApiModelProperty(notes = "This block is for father address")
 	private String fAddress;
-	
+
 	@Column(name = "f_sex", updatable = true)
 	@NotNull(message = "Please provide father sexual identity")
 	@ApiModelProperty(notes = "This block is for father sexual identity")
 	private String fSex;
-	
+
 	@Column(name = "f_PhoneNo", updatable = true)
 	@NotEmpty(message = "Please provide father mobile number")
 	@Size(min = 10, max = 15, message = "Mobile must be 10 to 15 char long")
 	@ApiModelProperty(notes = "This block is for father mobile number")
 	private String fPhoneNo;
-	
+
 	@Column(name = "f_Wife_Name", updatable = true)
 	@NotBlank(message = "Please provide your wife name")
 	@ApiModelProperty(notes = "This block is for father wife name")
 	private String fWifeName;
-	
+
 	@Column(name = "f_NoChild", updatable = true)
 	@ApiModelProperty(notes = "This block is for number of childerns")
 	private Long fNoChild;
-	
+
 	@Column(name = "f_dob", updatable = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@ApiModelProperty(notes = "This block is for father DOB")
 	private LocalDateTime fdob;
-	
+
 	@Column(name = "f_age", updatable = true)
 	@ApiModelProperty(notes = "This block is for father age")
 	private Long fage;
-	
+
 	@Email
 	@Column(name = "f_Email", updatable = true)
 	@ApiModelProperty(notes = "This block is for father email")
 	private String fEmail;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REFRESH }, orphanRemoval = true, mappedBy = "father_id")
+	@JsonIgnoreProperties("father_id")
+	private List<Son> son = new ArrayList<Son>();
+	
+	
+
+	public List getSon() {
+		return son;
+	}
+
+	public void setSon(List son) {
+		this.son = son;
+	}
 
 	public Long getId() {
 		return id;
@@ -270,11 +290,5 @@ public class Father implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
-	
-	
-	
 
 }

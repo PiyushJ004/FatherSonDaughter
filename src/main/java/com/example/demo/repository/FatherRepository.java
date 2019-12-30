@@ -23,17 +23,9 @@ public interface FatherRepository extends CrudRepository<Father, Long> {
 	@Query("Select Father from #{#entityName} Father")
 	public List<Father> getAllFathers();
 	
-	@Query("Delete #{entityName} Father where id = ?1")
-	public void deleteById(Long deleteId);
-	
 	@Modifying 
 	@Transactional
-	@Query("Update Father from #{#entityName} Father where id = ?1")
-	public Father updateById(String updateId);
-	
-	
-	
-	
-	
+	@Query("Delete #{#entityName} Father where id = ?1")
+	public void deleteById(Long deleteId);
 
 }

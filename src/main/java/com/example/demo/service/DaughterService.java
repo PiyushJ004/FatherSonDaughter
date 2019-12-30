@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Daughter;
-import com.example.demo.model.Son;
 import com.example.demo.repository.DaughterRepository;
 
 @Service

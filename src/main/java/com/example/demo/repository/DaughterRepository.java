@@ -13,26 +13,19 @@ import com.example.demo.model.Daughter;
 
 @Repository
 public interface DaughterRepository extends CrudRepository<Daughter, Long> {
-	
-	@Query("Select Daughter from #{entityName} Daughter where id = ?1")
+
+	@Query("Select Daughter from #{#entityName} Daughter where id = ?1")
 	public Daughter daughterByIdOnly(Long daughterId);
-	
-	@Query("Select Daughter from #{entityName} Daughter where id = ?1 and dName = ?1")
+
+	@Query("Select Daughter from #{#entityName} Daughter where id = ?1 and dName = ?2")
 	public Daughter daughterById(Long daughterId, String daughterName);
-	
-	@Query("Select Daughter from #{entityName} Daughter")
+
+	@Query("Select Daughter from #{#entityName} Daughter")
 	public List<Daughter> getAllDaughters();
-	
-	@Query("Delete from #{#entityName} Daughter where id = ?1")
-	public void deleteById(Long deleteId);
-	
+
 	@Modifying
 	@Transactional
-	@Query("Update Daughter from #{entityName} Daughter where id = ?1")
-	public Daughter updateById(String updateId);
-	
-	
-	
-	
+	@Query("Delete from #{#entityName} Daughter where id = ?1")
+	public void deleteById(Long deleteId);
 
 }
