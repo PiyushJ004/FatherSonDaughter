@@ -1,0 +1,84 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffff3b73d85, pid=13028, tid=2712
+#
+# JRE version: Java(TM) SE Runtime Environment (12.0.1+12) (build 12.0.1+12)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (12.0.1+12, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
+# Problematic frame:
+# V  [jvm.dll+0x663d85]
+#
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=55050 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost -Dspring.jmx.enabled=true -Dspring.application.admin.enabled=true -Xverify:none -XX:TieredStopAtLevel=1 -Dspring.boot.project.name=Father_Son_Daughter -Dfile.encoding=UTF-8 com.example.demo.FatherSonDaughterApplication --spring.output.ansi.enabled=always
+
+Host: Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz, 4 cores, 5G,  Windows 10 , 64 bit Build 18362 (10.0.18362.329)
+Time: Tue Dec 31 13:18:06 2019 India Standard Time elapsed time: 1 seconds (0d 0h 0m 1s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000019b1b14f800):  WatcherThread [stack: 0x0000000981200000,0x0000000981300000] [id=2712]
+
+Stack: [0x0000000981200000,0x0000000981300000],  sp=0x00000009812ff810,  free space=1022k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x663d85]
+V  [jvm.dll+0x6cbbbf]
+V  [jvm.dll+0x71b0dd]
+V  [jvm.dll+0x74f809]
+V  [jvm.dll+0x748648]
+V  [jvm.dll+0x638566]
+C  [ucrtbase.dll+0x20e72]
+C  [KERNEL32.DLL+0x17bd4]
+C  [ntdll.dll+0x6ced1]
+
+
+siginfo: EXCEPTION_ACCESS_VIOLATION (0xc0000005), reading address 0x0000000400000003
+
+
+Register to memory mapping:
+
+RIP=0x00007ffff3b73d85 jvm.dll
+RAX=0x0000000400000003 is an unknown value
+RBX=0x0000019b1b113750 points into unknown readable memory: 20 40 df f3 ff 7f 00 00
+RCX=0x0000019b1b1151f0 points into unknown readable memory: 03 00 00 00 04 00 00 00
+RDX=0x0000000000000032 is an unknown value
+RSP=0x00000009812ff810 points into unknown readable memory: c0 62 5e 7c 9b 01 00 00
+RBP=0x0000000000000002 is an unknown value
+RSI=0x0000019b1b115310 points into unknown readable memory: 00 ea 0b 1b 9b 01 00 00
+RDI=0x0 is NULL
+R8 =0x0 is NULL
+R9 =0x0000019b08330b80 is at begin+0 in a stub
+StubRoutines::atomic_cmpxchg_long [0x0000019b08330b80, 0x0000019b08330b89[ (9 bytes)
+R10=0x00000000546c6148 is an unknown value
+R11=0x000003b277984c50 is an unknown value
+R12=0x0 is NULL
+R13=0x0000019b1b14f800 points into unknown readable memory: 40 19 e0 f3 ff 7f 00 00
+R14=0x0000000000000032 is an unknown value
+R15=0x0000019b1b14cff0 points into unknown readable memory: 00 00 00 00 00 00 00 00
+
+
+Registers:
+RAX=0x0000000400000003, RBX=0x0000019b1b113750, RCX=0x0000019b1b1151f0, RDX=0x0000000000000032
+RSP=0x00000009812ff810, RBP=0x0000000000000002, RSI=0x0000019b1b115310, RDI=0x0000000000000000
+R8 =0x0000000000000000, R9 =0x0000019b08330b80, R10=0x00000000546c6148, R11=0x000003b277984c50
+R12=0x0000000000000000, R13=0x0000019b1b14f800, R14=0x0000000000000032, R15=0x0000019b1b14cff0
+RIP=0x00007ffff3b73d85, EFLAGS=0x0000000000010206
+
+Top of Stack: (sp=0x00000009812ff810)
+0x00000009812ff810:   0000019b7c5e62c0 0000019b7c5e62c0
+0x00000009812ff820:   0000000000000001 00007ffff3b1d340
+0x00000009812ff830:   0000000000000000 00007ffff3bdbbbf
+0x00000009812ff840:   0000019b1b14f800 0000019b1b14f800
+0x00000009812ff850:   0001ce83076a043c 00007ffff3b1dd79
+0x00000009812ff860:   00007ffff3fceae8 00007ffff3c2b0dd
+0x00000009812ff870:   0000000000000001 0000019b7c5e62c0
+0x00000009812ff880:   0000019b7c5e62c0 431bde82d7b634db
+0x00000009812ff890:   0000019b1b14cff0 0001ce83076a043c
+0x00000009812ff8a0:   0000019b7c5e62c0 00007ffff3c5f809
+0x00000009812ff8b0:   

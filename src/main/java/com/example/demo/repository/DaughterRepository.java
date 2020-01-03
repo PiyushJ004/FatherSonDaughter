@@ -28,4 +28,14 @@ public interface DaughterRepository extends CrudRepository<Daughter, Long> {
 	@Query("Delete from #{#entityName} Daughter where id = ?1")
 	public void deleteById(Long deleteId);
 
+	// @Query(nativeQuery = true ,value="Select *from son_data where father_id->'id'
+	// = ?1")
+	@Query("select Daughter from #{#entityName} Daughter where father_id.id = ?1")
+	public List<Daughter> getAllDaughterByFatherId(Long id);
+
+	@Modifying
+	@Transactional
+	@Query("Update #{#entityName} Daughter set father_id = null  where id = ?1")
+	public void updateDaughterDetails(Long id);
+
 }

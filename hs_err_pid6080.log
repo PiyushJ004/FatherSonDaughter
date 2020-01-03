@@ -1,0 +1,94 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffff3bdbbb9, pid=6080, tid=13692
+#
+# JRE version: Java(TM) SE Runtime Environment (12.0.1+12) (build 12.0.1+12)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (12.0.1+12, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
+# Problematic frame:
+# V  [jvm.dll+0x6cbbb9]
+#
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=49547 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost -Dspring.jmx.enabled=true -Dspring.application.admin.enabled=true -Xverify:none -XX:TieredStopAtLevel=1 -Dspring.boot.project.name=Father_Son_Daughter -Dfile.encoding=UTF-8 com.example.demo.FatherSonDaughterApplication --spring.output.ansi.enabled=always
+
+Host: Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz, 4 cores, 5G,  Windows 10 , 64 bit Build 18362 (10.0.18362.329)
+Time: Mon Dec 30 23:35:35 2019 India Standard Time elapsed time: 1 seconds (0d 0h 0m 1s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000001a5f4387800):  WatcherThread [stack: 0x0000005b24f00000,0x0000005b25000000] [id=13692]
+
+Stack: [0x0000005b24f00000,0x0000005b25000000],  sp=0x0000005b24fff710,  free space=1021k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x6cbbb9]
+V  [jvm.dll+0x71b0dd]
+V  [jvm.dll+0x74f809]
+V  [jvm.dll+0x748648]
+V  [jvm.dll+0x638566]
+C  [ucrtbase.dll+0x20e72]
+C  [KERNEL32.DLL+0x17bd4]
+C  [ntdll.dll+0x6ced1]
+
+
+siginfo: EXCEPTION_ACCESS_VIOLATION (0xc0000005), reading address 0x0000000c0000000b
+
+
+Register to memory mapping:
+
+RIP=0x00007ffff3bdbbb9 jvm.dll
+RAX=0x000001a5f4368570 points into unknown readable memory: 0b 00 00 00 0c 00 00 00
+RBX=0x0 is NULL
+RCX=0x0000000c0000000b is an unknown value
+RDX=0x0000000000000032 is an unknown value
+RSP=0x0000005b24fff710 points into unknown readable memory: 00 78 38 f4 a5 01 00 00
+RBP=0x0000000000000002 is an unknown value
+RSI=0x000001a5f43682f0 points into unknown readable memory: a0 08 31 f4 a5 01 00 00
+RDI=0x0 is NULL
+R8 =0x0 is NULL
+R9 =0x000001a5ddd20b80 is at begin+0 in a stub
+StubRoutines::atomic_cmpxchg_long [0x000001a5ddd20b80, 0x000001a5ddd20b89[ (9 bytes)
+R10=0x00000000546c6148 is an unknown value
+R11=0x0000035c1233b943 is an unknown value
+R12=0x0 is NULL
+R13=0x000001a5f4387800 points into unknown readable memory: 40 19 e0 f3 ff 7f 00 00
+R14=0x0000000000000032 is an unknown value
+R15=0x000001a5f43834a0 points into unknown readable memory: 00 00 00 00 00 00 00 00
+
+
+Registers:
+RAX=0x000001a5f4368570, RBX=0x0000000000000000, RCX=0x0000000c0000000b, RDX=0x0000000000000032
+RSP=0x0000005b24fff710, RBP=0x0000000000000002, RSI=0x000001a5f43682f0, RDI=0x0000000000000000
+R8 =0x0000000000000000, R9 =0x000001a5ddd20b80, R10=0x00000000546c6148, R11=0x0000035c1233b943
+R12=0x0000000000000000, R13=0x000001a5f4387800, R14=0x0000000000000032, R15=0x000001a5f43834a0
+RIP=0x00007ffff3bdbbb9, EFLAGS=0x0000000000010202
+
+Top of Stack: (sp=0x0000005b24fff710)
+0x0000005b24fff710:   000001a5f4387800 000001a5f4387800
+0x0000005b24fff720:   0001a19c71061390 00007ffff3b1dd79
+0x0000005b24fff730:   00007ffff3fceae8 00007ffff3c2b0dd
+0x0000005b24fff740:   0000000000000001 000001a5d59321d0
+0x0000005b24fff750:   000001a5d59321d0 431bde82d7b634db
+0x0000005b24fff760:   000001a5f43834a0 0001a19c71061390
+0x0000005b24fff770:   000001a5d59321d0 00007ffff3c5f809
+0x0000005b24fff780:   0000000000000001 0000000000000032
+0x0000005b24fff790:   0000000000000032 0000000000000002
+0x0000005b24fff7a0:   0000000000000000 0000000000000000
+0x0000005b24fff7b0:   0000000000000000 00007ffff38df47e
+0x0000005b24fff7c0:   0000000000000000 0000000000000000
+0x0000005b24fff7d0:   0000000000000000 0000000000000000
+0x0000005b24fff7e0:   000001a5f4387800 0000000000000000
+0x0000005b24fff7f0:   0000000000100000 0000005b24fff9c0
+0x0000005b24fff800:   0000005b24f00000 00007ffff3c58648 
+
+Instructions: (pc=0x00007ffff3bdbbb9)
+0x00007ffff3bdbb99:   20 48 8b 35 df 0c 3e 00 33 db 48 8b 06 39 18 7e
+0x00007ffff3bdbba9:   27 48 89 7c 24 30 8b fb 48 8b 40 18 48 8b 0c 07
+0x00007ffff3bdbbb9:   48 8b 01 ff 50 08 48 8b 06 48 8d 7f 08 ff c3 3b
+0x00007ffff3bdbbc9:   

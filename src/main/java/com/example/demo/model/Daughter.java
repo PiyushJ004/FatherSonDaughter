@@ -2,12 +2,20 @@ package com.example.demo.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -17,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -64,6 +73,30 @@ public class Daughter implements Serializable {
 	@Column(name = "d_Email", updatable = true)
 	@ApiModelProperty(notes = "This block is for daughter email")
 	private String dEmail;
+	
+	
+	@ManyToOne(cascade = { CascadeType.MERGE })
+	@JoinColumn(name = "father_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = false)
+	@JsonIgnoreProperties("daughter")
+	private Father father_id;
+
+	@ManyToOne(cascade = { CascadeType.MERGE })
+	@JoinColumn(name = "son_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = false)
+	@JsonIgnoreProperties("daughter")
+	private Son son_id;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REFRESH }, mappedBy = "daughter_id")
+	@JsonIgnoreProperties("daughter_id")
+	private List<Son> son = new ArrayList<Son>();
+	
+
+	public Father getFather_id() {
+		return father_id;
+	}
+
+	public void setFather_id(Father father_id) {
+		this.father_id = father_id;
+	}
 
 	public Long getId() {
 		return id;

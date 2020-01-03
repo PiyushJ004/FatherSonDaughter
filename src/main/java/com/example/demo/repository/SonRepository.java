@@ -29,4 +29,13 @@ public interface SonRepository extends CrudRepository<Son, Long> {
 	@Query("Delete #{#entityName} Son where id = ?1")
 	public void deleteById(Long deleteId);
 
+	//@Query(nativeQuery = true ,value="Select *from son_data where father_id->'id' = ?1")
+	@Query("select Son from #{#entityName} Son where father_id.id = ?1")
+	public List<Son> getAllSonByFatherId(Long id);
+
+	@Modifying
+	@Transactional
+	@Query("Update #{#entityName} Son set father_id = null  where id = ?1")
+	public void updateSonDetails(Long id);
+
 }

@@ -76,9 +76,10 @@ public class DaughterController {
 			return new ResponseEntity<String>("Sorry, could not retrieve data from daughter table for id: " + id,
 					HttpStatus.BAD_REQUEST);
 		}
-		Gson gson = new Gson();
-		String gsonString = gson.toJson(daughterFromDB);
-		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
+		/*
+		 * Gson gson = new Gson(); String gsonString = gson.toJson(daughterFromDB);
+		 */
+		return new ResponseEntity<Daughter>(daughterFromDB, HttpStatus.OK);
 	}
 	
 	@RequestMapping(path = "/get1", method = RequestMethod.GET, produces = "application/json")
@@ -96,9 +97,10 @@ public class DaughterController {
 			return new ResponseEntity<String>("Sorry, No data found", HttpStatus.OK);
 		}
 		
-		Gson gson = new Gson();
-		String gsonString = gson.toJson(daughterFromDB);
-		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
+		/*
+		 * Gson gson = new Gson(); String gsonString = gson.toJson(daughterFromDB);
+		 */
+		return new ResponseEntity<Daughter>(daughterFromDB, HttpStatus.OK);
 	}
 	
 	@RequestMapping(path = "/get2", method = RequestMethod.GET, produces = "application/json")
@@ -113,9 +115,10 @@ public class DaughterController {
 			logger.info("***************Insode if block of daughter getAllDaughters ***************");
 			return new ResponseEntity<String>("Sorry, No data found for daughter", HttpStatus.BAD_REQUEST);
 		}
-		Gson gson = new Gson();
-		String gsonString = gson.toJson(daughterList);
-		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
+		/*
+		 * Gson gson = new Gson(); String gsonString = gson.toJson(daughterList);
+		 */
+		return new ResponseEntity<List<Daughter>>(daughterList, HttpStatus.OK);
 	}
 	
 	@RequestMapping(path = "/delete", method = RequestMethod.DELETE, produces = "test/plain")

@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.Daughter;
 import com.example.demo.model.Father;
+import com.example.demo.model.Son;
+import com.example.demo.repository.DaughterRepository;
+import com.example.demo.repository.SonRepository;
 import com.example.demo.service.FatherService;
 import com.google.gson.Gson;
 
@@ -38,6 +42,12 @@ public class FatherController {
 
 	@Autowired
 	private FatherService fatherService;
+
+	@Autowired
+	private SonRepository sonRepository;
+	
+	@Autowired
+	private DaughterRepository daughterRepository;
 
 	@RequestMapping(path = "/create", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
@@ -57,8 +67,11 @@ public class FatherController {
 
 		Father fatherToDb = fatherService.registerFather(father);
 		logger.info("Father value: " + fatherToDb);
-		
-		return new ResponseEntity<Father>(fatherToDb, HttpStatus.CREATED);
+
+		/* return new ResponseEntity<Father>(fatherToDb, HttpStatus.CREATED); */
+		Gson gson = new Gson();
+		String gsonString = gson.toJson(fatherToDb);
+		return new ResponseEntity<String>(gsonString, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
@@ -69,13 +82,18 @@ public class FatherController {
 			@ApiParam(value = "id", required = true) @RequestParam(value = "id", required = true) Long id) {
 		logger.info("***************Inside FatherController getFatherByID method*************** ");
 		Father fatherFromDB = fatherService.getFatherByFatherIdOnly(id);
-		logger.info("Father value: " + fatherFromDB );
+		logger.info("Father value: " + fatherFromDB);
 		if (fatherFromDB == null) {
 			logger.info("**************Inside if block of father getFatherByID***************");
 			return new ResponseEntity<String>("Sorry Could Not Retrieve Data From Father Table For id:- " + id,
 					HttpStatus.BAD_REQUEST);
 		}
-		
+
+		/*
+		 * Gson gson = new Gson(); String gsonString = gson.toJson(fatherFromDB); return
+		 * new ResponseEntity<String>(gsonString, HttpStatus.OK);
+		 */
+
 		return new ResponseEntity<Father>(fatherFromDB, HttpStatus.OK);
 	}
 
@@ -88,15 +106,16 @@ public class FatherController {
 			@ApiParam(value = "name", required = true) @RequestParam(value = "name", required = true) String name) {
 		logger.info("***************Inside FatherController getFatherByIdAndName method*************** ");
 		Father fatherFromDB = fatherService.getFatherById(id, name);
-		logger.info("Father value: " + fatherFromDB );
+		logger.info("Father value: " + fatherFromDB);
 		if (fatherFromDB == null) {
 			logger.info("**************Inside if block of father getFatherByIdAndName***************");
 			return new ResponseEntity<String>("Sorry No Data Found", HttpStatus.BAD_REQUEST);
 		}
 
-		Gson gson = new Gson();
-		String gsonString = gson.toJson(fatherFromDB);
-		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
+		/*
+		 * Gson gson = new Gson(); String gsonString = gson.toJson(fatherFromDB);
+		 */
+		return new ResponseEntity<Father>(fatherFromDB, HttpStatus.OK);
 
 	}
 
@@ -107,14 +126,15 @@ public class FatherController {
 	public ResponseEntity<?> getAllFatherDetails() {
 		logger.info("***************Inside FatherController getAllFatherDetails method*************** ");
 		List<Father> fatherList = fatherService.getAllFathers();
-		logger.info("Father value: " + fatherList );
+		logger.info("Father value: " + fatherList);
 		if (fatherList.size() == 0 || fatherList == null) {
 			logger.info("**************Inside if block of father getAllFatherDetails***************");
 			return new ResponseEntity<String>("Sorry No Data Found For Father", HttpStatus.BAD_REQUEST);
 		}
-		Gson gson = new Gson();
-		String gsonString = gson.toJson(fatherList);
-		return new ResponseEntity<String>(gsonString, HttpStatus.OK);
+		/*
+		 * Gson gson = new Gson(); String gsonString = gson.toJson(fatherList);
+		 */
+		return new ResponseEntity<List<Father>>(fatherList, HttpStatus.OK);
 
 	}
 
@@ -125,13 +145,26 @@ public class FatherController {
 	public ResponseEntity<?> deleteFatherByID(
 			@ApiParam(value = "id", required = true) @RequestParam(value = "id", required = true) Long id) {
 		logger.info("***************Inside FatherController deleteFatherByID method*************** ");
+
+		List<Son> allSonForThisFather = sonRepository.getAllSonByFatherId(id);
+		for (int iter = 0; iter < allSonForThisFather.size(); iter++) {
+			Son sonFromDB = allSonForThisFather.get(iter);
+			sonRepository.updateSonDetails(sonFromDB.getId());
+			
+		}
+		
+		List<Daughter> allDaughterForThisFather = daughterRepository.getAllDaughterByFatherId(id);
+		for (int iter = 0; iter < allDaughterForThisFather.size(); iter++) {
+			Daughter sonFromDB = allDaughterForThisFather.get(iter);
+			daughterRepository.updateDaughterDetails(sonFromDB.getId());
+		}
+
 		String response = fatherService.deleteFatherById(id);
-		logger.info("Father value: " + response );
+		logger.info("Father value: " + response);
 		if (response == null) {
 			logger.info("**************Inside if block of father deleteFatherByID***************");
 			return new ResponseEntity<String>("Sorry No Data Found To Delete", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
-
 }

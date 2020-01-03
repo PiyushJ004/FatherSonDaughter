@@ -91,13 +91,27 @@ public class Father implements Serializable {
 	@JsonIgnoreProperties("father_id")
 	private List<Son> son = new ArrayList<Son>();
 	
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REFRESH }, orphanRemoval = true, mappedBy = "father_id")
+	@JsonIgnoreProperties("father_id")
+	private List<Daughter> daughter = new ArrayList<Daughter>();
+	
 	
 
-	public List getSon() {
+
+
+	public List<Daughter> getDaughter() {
+		return daughter;
+	}
+
+	public void setDaughter(List<Daughter> daughter) {
+		this.daughter = daughter;
+	}
+
+	public List<Son> getSon() {
 		return son;
 	}
 
-	public void setSon(List son) {
+	public void setSon(List<Son> son) {
 		this.son = son;
 	}
 
