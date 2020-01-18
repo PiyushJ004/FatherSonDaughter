@@ -1,8 +1,18 @@
 package com.example.demo.service;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
 
 import org.hibernate.HibernateException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +21,25 @@ import org.springframework.stereotype.Service;
 import com.example.demo.exception.BaseException;
 import com.example.demo.model.Father;
 import com.example.demo.repository.FatherRepository;
+import com.example.demo.util.ReflectionUtil;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class FatherService {
 
 	private static final Logger logger = LoggerFactory.getLogger(FatherService.class);
+
+	ReflectionUtil refUtil = ReflectionUtil.getInstance();
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@PostConstruct
+	public void setUp() {
+		objectMapper.registerModule(new JavaTimeModule());
+	}
 
 	@Autowired
 	public FatherRepository fatherRepository;
@@ -82,7 +106,7 @@ public class FatherService {
 		try {
 			logger.info("************Inside getFatherByFatherIdOnly try*************** ");
 			Father fatherFromDB = fatherRepository.fatherByIdOnly(id);
-			logger.info("Father value: " + fatherFromDB );
+			logger.info("Father value: " + fatherFromDB);
 			return fatherFromDB;
 		} catch (final Exception e) {
 			logger.error("************Inside getFatherByFatherIdOnly catch exception***************");
@@ -90,4 +114,35 @@ public class FatherService {
 		}
 
 	}
+
+	public Father updateFatherById(String father, Long id) throws ParseException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, JsonParseException, JsonMappingException, IOException {
+
+		Father fatherFromDB = getFatherByFatherIdOnly(id);
+		if (fatherFromDB == null) {
+			return null;
+		}
+
+		Father fatherFromPayload = objectMapper.readValue(father, Father.class);
+		LocalDateTime d = fatherFromPayload.getFdob();
+
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) parser.parse(father);
+		for (Iterator iterator = ((Map<String, String>) jsonObject).keySet().iterator(); iterator.hasNext();) {
+			String prop = (String) iterator.next();
+
+			if (prop.equals("f_dob")) {
+				fatherFromDB.setFdob(d);
+
+			} else {
+				refUtil.getSetterMethod("Father", prop).invoke(fatherFromDB, jsonObject.get(prop));
+			}
+
+		}
+
+		Father f = fatherRepository.save(fatherFromDB);
+		return f;
+
+	}
+
 }

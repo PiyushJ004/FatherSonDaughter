@@ -74,19 +74,9 @@ public class Son implements Serializable {
 	private String sEmail;
 
 	@ManyToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "father_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "father_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = true)
 	@JsonIgnoreProperties("son")
 	private Father father_id;
-
-	
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REFRESH }, mappedBy = "son_id")
-	@JsonIgnoreProperties("son_id")
-	private List<Daughter> daughter = new ArrayList<Daughter>();
-	
-	@ManyToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "daughter_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = false)
-	@JsonIgnoreProperties("son")
-	private Daughter daughter_id;
 	
 	
 	public Father getFather_id() {

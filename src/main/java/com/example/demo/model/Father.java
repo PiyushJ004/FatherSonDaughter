@@ -30,6 +30,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import io.swagger.annotations.ApiModelProperty;
 
+
 @Entity(name = "Father")
 @Table(name = "father_details", uniqueConstraints = { @UniqueConstraint(columnNames = { "f_PhoneNo", "f_Email" }) })
 

@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ import com.example.demo.model.Son;
 import com.example.demo.repository.DaughterRepository;
 import com.example.demo.repository.SonRepository;
 import com.example.demo.service.FatherService;
+import com.example.demo.util.ReflectionUtil;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 
 import io.swagger.annotations.Api;
@@ -40,12 +46,14 @@ public class FatherController {
 
 	private static final Logger logger = LoggerFactory.getLogger(FatherController.class);
 
+	ReflectionUtil refUtil = ReflectionUtil.getInstance();
+
 	@Autowired
 	private FatherService fatherService;
 
 	@Autowired
 	private SonRepository sonRepository;
-	
+
 	@Autowired
 	private DaughterRepository daughterRepository;
 
@@ -150,9 +158,9 @@ public class FatherController {
 		for (int iter = 0; iter < allSonForThisFather.size(); iter++) {
 			Son sonFromDB = allSonForThisFather.get(iter);
 			sonRepository.updateSonDetails(sonFromDB.getId());
-			
+
 		}
-		
+
 		List<Daughter> allDaughterForThisFather = daughterRepository.getAllDaughterByFatherId(id);
 		for (int iter = 0; iter < allDaughterForThisFather.size(); iter++) {
 			Daughter sonFromDB = allDaughterForThisFather.get(iter);
@@ -166,5 +174,25 @@ public class FatherController {
 			return new ResponseEntity<String>("Sorry No Data Found To Delete", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	@RequestMapping(path = "/update", method = RequestMethod.PATCH/* , consumes = "text/plain" */, produces = "application/json")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "/update", notes = "Update Father Resource by Id", response = String.class)
+	public ResponseEntity<?> updateFatherByID(@RequestBody String father,
+			@RequestParam(value = "id", required = true) Long id) throws JsonParseException, JsonMappingException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException, ParseException, IOException {
+
+		Father updatedFather = fatherService.updateFatherById(father, id);
+		if (updatedFather == null) {
+			return new ResponseEntity<String>("Sorry No Data exist for id:-  " + id, HttpStatus.BAD_REQUEST);
+		}
+		
+		
+		
+		
+		return new ResponseEntity<Father>(updatedFather, HttpStatus.OK);
+
 	}
 }

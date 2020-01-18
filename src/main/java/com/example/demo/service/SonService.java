@@ -1,8 +1,18 @@
 package com.example.demo.service;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
 
 import org.hibernate.HibernateException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +20,25 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Son;
 import com.example.demo.repository.SonRepository;
+import com.example.demo.util.ReflectionUtil;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class SonService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SonService.class);
+	
+	ReflectionUtil refUtil = ReflectionUtil.getInstance();
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@PostConstruct
+	public void setUp() {
+		objectMapper.registerModule(new JavaTimeModule());
+	}
 	
 	@Autowired
 	public SonRepository sonRepository;
@@ -83,6 +107,34 @@ public class SonService {
 			throw new RuntimeException(e.getMessage());
 		}
 
+	}
+	
+	public Son updateSonById(String son, Long id) throws JsonParseException, JsonMappingException,
+	IOException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		
+		Son sonFromDB = getSonBySonIdOnly(id);
+		if(sonFromDB == null) {
+			return null;
+		}
+		
+		Son sonFromPayload = objectMapper.readValue(son, Son.class);
+		LocalDateTime d = sonFromPayload.getsDob();
+		
+		JSONParser parser = new JSONParser();
+		JSONObject jsonObject = (JSONObject) parser.parse(son);
+		for(Iterator iterator = ((Map<String, String>) jsonObject).keySet().iterator(); iterator.hasNext();) {
+			String prop = (String) iterator.next();
+			
+			if(prop.equals("s_dob")) {
+				sonFromDB.setsDob(d);
+				
+			} else {
+				refUtil.getSetterMethod("son", prop).invoke(sonFromDB, jsonObject.get(prop));
+			}
+		}
+		
+		Son s = sonRepository.save(sonFromDB);
+		return s;
 	}
 
 }

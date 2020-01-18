@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Daughter;
 import com.example.demo.service.DaughterService;
+import com.example.demo.util.ReflectionUtil;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 
 import io.swagger.annotations.Api;
@@ -30,48 +36,48 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(path="/api/object/daughter")
+@RequestMapping(path = "/api/object/daughter")
 @Api(value = "Daughter Crud Operation", description = "This controller is for crud operation of daughter instance")
 public class DaughterController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(Daughter.class);
-	
+
+	ReflectionUtil refUtil = ReflectionUtil.getInstance();
+
 	@Autowired
 	private DaughterService daughterService;
-	
+
 	@RequestMapping(path = "/create", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation(value = "/create", notes = "Get Daughter resource by id", response = Daughter.class)
-	public ResponseEntity<?> createInstance(@Valid @RequestBody Daughter daughter, BindingResult bindingResult){
+
+	public ResponseEntity<?> createInstance(@Valid @RequestBody Daughter daughter, BindingResult bindingResult) {
 		logger.info("***************Inside DaughterController Instance method****************");
-		if(bindingResult.hasErrors() == true) {
+		if (bindingResult.hasErrors() == true) {
 			logger.info("**************Inside if block of daughter createInstance");
 			Map<String, String> error = new LinkedHashMap<String, String>();
-			for(FieldError fieldError : bindingResult.getFieldErrors()) {
+			for (FieldError fieldError : bindingResult.getFieldErrors()) {
 				logger.info("*************Inside for block of daughter createInstance***************");
 				error.put(fieldError.getField(), fieldError.getDefaultMessage());
 			}
 			return new ResponseEntity<Map<String, String>>(error, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		Daughter daughterToDb = daughterService.registerDaughter(daughter);
 		logger.info("Daughter value: " + daughterToDb);
 		Gson gson = new Gson();
 		String gsonString = gson.toJson(daughterToDb);
 		return new ResponseEntity<String>(gsonString, HttpStatus.CREATED);
 	}
-	
+
 	@RequestMapping(path = "/get", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get daughter resource by id", response = Daughter.class)
 	public ResponseEntity<?> getDaughterByID(
-			@ApiParam(value = "/get", required = true) @RequestParam(value = "id", required = true) Long id){
+			@ApiParam(value = "/get", required = true) @RequestParam(value = "id", required = true) Long id) {
 		logger.info("*************Inside DaughterController getDaughterByID*****************");
 		Daughter daughterFromDB = daughterService.getDaughterByDaughterIdOnly(id);
 		logger.info("Daughter value :" + daughterFromDB);
-		if(daughterFromDB == null) {
+		if (daughterFromDB == null) {
 			logger.info("*********Inside if block of daughter getDaughterByID**************");
 			return new ResponseEntity<String>("Sorry, could not retrieve data from daughter table for id: " + id,
 					HttpStatus.BAD_REQUEST);
@@ -81,37 +87,37 @@ public class DaughterController {
 		 */
 		return new ResponseEntity<Daughter>(daughterFromDB, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(path = "/get1", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get Daughter resource by id and name", response = Daughter.class)
 	public ResponseEntity<?> getDaughterIdAndName(
-			@ApiParam(value = "id", required = true)@RequestParam(value = "id", required = true)Long id,
-			@ApiParam(value = "name", required = true)@RequestParam(value = "name", required = true)String name){
+			@ApiParam(value = "id", required = true) @RequestParam(value = "id", required = true) Long id,
+			@ApiParam(value = "name", required = true) @RequestParam(value = "name", required = true) String name) {
 		logger.info("***************Inside DaughterController getDaughterIdAndName method**************");
 		Daughter daughterFromDB = daughterService.getDaughterById(id, name);
 		logger.info("Daughter value: " + daughterFromDB);
-		if(daughterFromDB == null) {
+		if (daughterFromDB == null) {
 			logger.info("***************Inside if block of daughter getDaughterIdAndName**************");
 			return new ResponseEntity<String>("Sorry, No data found", HttpStatus.OK);
 		}
-		
+
 		/*
 		 * Gson gson = new Gson(); String gsonString = gson.toJson(daughterFromDB);
 		 */
 		return new ResponseEntity<Daughter>(daughterFromDB, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(path = "/get2", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/get", notes = "Get all daughter resource", response = Daughter.class, responseContainer = "List")
-	public ResponseEntity<?> getAllDaughters(){
+	public ResponseEntity<?> getAllDaughters() {
 		logger.info("************Inside DaughterController getAllDaughters method***************");
 		List<Daughter> daughterList = daughterService.getAllDaughters();
 		logger.info("Daughter value: " + daughterList);
-		if(daughterList.size() == 0 || daughterList == null) {
+		if (daughterList.size() == 0 || daughterList == null) {
 			logger.info("***************Insode if block of daughter getAllDaughters ***************");
 			return new ResponseEntity<String>("Sorry, No data found for daughter", HttpStatus.BAD_REQUEST);
 		}
@@ -120,22 +126,37 @@ public class DaughterController {
 		 */
 		return new ResponseEntity<List<Daughter>>(daughterList, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(path = "/delete", method = RequestMethod.DELETE, produces = "test/plain")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "/delete", notes = "Remove daughter resource by ID", response = String.class)
 	public ResponseEntity<?> deleteDaughterByID(
-			@ApiParam(value = "/get", required = true) @RequestParam(value = "id", required = true) Long id){
+			@ApiParam(value = "/get", required = true) @RequestParam(value = "id", required = true) Long id) {
 		logger.info("************Inside DaughterController deleteDaughterByID***************");
 		String response = daughterService.deleteSonById(id);
 		logger.info("Daughter value: " + response);
-		if(response == null) {
+		if (response == null) {
 			logger.info("*****************Inside if block of daughter deleteDaughterByID**************");
 			return new ResponseEntity<String>("Sorry, No data found", HttpStatus.BAD_REQUEST);
 		}
-		
+
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
-}
 
+	@RequestMapping(path = "/update", method = RequestMethod.PATCH/* , consumes = "text/plain" */, produces = "application/json")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "/update", notes = "Update Daughter Resource by Id", response = String.class)
+	public ResponseEntity<?> updateDaughterByID(@RequestBody String daughter,
+			@RequestParam(value = "id", required = true) Long id) throws JsonParseException, JsonMappingException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException, ParseException {
+
+		Daughter updateDaughter = daughterService.updateDaughterById(daughter, id);
+		if (updateDaughter == null) {
+			return new ResponseEntity<String>("Sorry No Data exist for id:-  " + id, HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<Daughter>(updateDaughter, HttpStatus.OK);
+	}
+}

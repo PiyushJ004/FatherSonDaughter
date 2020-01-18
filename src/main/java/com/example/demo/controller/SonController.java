@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Son;
 import com.example.demo.service.SonService;
+import com.example.demo.util.ReflectionUtil;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 
 import io.swagger.annotations.Api;
@@ -35,6 +41,8 @@ import io.swagger.annotations.ApiParam;
 public class SonController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SonController.class);
+	
+	ReflectionUtil refUtil = ReflectionUtil.getInstance();
 
 	@Autowired
 	private SonService sonService;
@@ -140,4 +148,24 @@ public class SonController {
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(path = "/update", method = RequestMethod.PATCH/* , consumes = "text/plain" */, produces = "application/json")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "/update", notes = "Update Son Resource by Id", response = String.class)
+	public ResponseEntity<?> updateSonByID(@RequestBody String son,
+			@RequestParam(value = "id", required = true) Long id) throws JsonParseException, JsonMappingException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException, ParseException{
+		
+		Son updateSon = sonService.updateSonById(son, id);
+		if(updateSon == null) {
+			return new ResponseEntity<String>("Sorry No data exist for id:-  " + id, HttpStatus.BAD_REQUEST);
+			
+		}
+		
+		
+		return new ResponseEntity<Son>(updateSon, HttpStatus.OK);
+	}
+	
+	
 }

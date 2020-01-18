@@ -2,20 +2,15 @@ package com.example.demo.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -33,62 +28,58 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import io.swagger.annotations.ApiModelProperty;
 
+
+
+
+
 @Entity(name = "Daughter")
-@Table(name = "daughter_Data", uniqueConstraints = {@UniqueConstraint(columnNames = {"d_PhoneNo", "d_Email"})})
+@Table(name = "daughter_Data", uniqueConstraints = { @UniqueConstraint(columnNames = { "d_PhoneNo", "d_Email" }) })
 
 public class Daughter implements Serializable {
+
 	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-	
+
 	@Column(name = "d_Name", updatable = true)
 	@NotBlank(message = "Please provide daughter detail")
 	@ApiModelProperty(notes = "This block is for daughter name")
 	private String dName;
-	
+
 	@Column(name = "d_Sex", updatable = true)
 	@NotNull(message = "Please provide daughter sexual identity")
 	@ApiModelProperty(notes = "This block is for daughter sexual identity")
 	private String dSex;
-	
+
 	@Column(name = "d_PhoneNo", updatable = true)
-	//@NotEmpty(message = "Please provide daughter mobile number")
+	// @NotEmpty(message = "Please provide daughter mobile number")
 	@Size(min = 10, max = 15, message = "Phone number must be 10 to 15 char long")
 	@ApiModelProperty(notes = "This block is for daughter phone number")
 	private String dPhoneNo;
-	
-	@Column(name = "d_Dob", updatable = true)
+
+	@Column(name = "d_Dob")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime dDob;
-	
+
 	@Column(name = "d_Age", updatable = true)
 	@ApiModelProperty(notes = "This block is for daughter age")
 	private Long dAge;
-	
+
 	@Email
 	@Column(name = "d_Email", updatable = true)
 	@ApiModelProperty(notes = "This block is for daughter email")
 	private String dEmail;
-	
-	
+
 	@ManyToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "father_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "father_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = true)
 	@JsonIgnoreProperties("daughter")
 	private Father father_id;
 
-	@ManyToOne(cascade = { CascadeType.MERGE })
-	@JoinColumn(name = "son_id", columnDefinition = "bigint", referencedColumnName = "id", nullable = false)
-	@JsonIgnoreProperties("daughter")
-	private Son son_id;
-	
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REFRESH }, mappedBy = "daughter_id")
-	@JsonIgnoreProperties("daughter_id")
-	private List<Son> son = new ArrayList<Son>();
-	
 
 	public Father getFather_id() {
 		return father_id;
@@ -239,12 +230,5 @@ public class Daughter implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
-	
-	
-	
-	
 
 }
