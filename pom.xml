@@ -9,7 +9,7 @@
 		<version>2.1.6.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.example.demo</groupId>
 	<artifactId>Father_Son_Daughter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Father_Son_Daughter</name>
@@ -19,12 +19,10 @@
 		<java.version>12</java.version>
 	</properties>
 
+
 	<dependencies>
-		<!-- <dependency>
-			<groupId>com.github.raychatter</groupId>
-			<artifactId>spring-restful-exception-handler</artifactId>
-			<version>1.0.5</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>com.github.raychatter</groupId> <artifactId>spring-restful-exception-handler</artifactId> 
+			<version>1.0.5</version> </dependency> -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
